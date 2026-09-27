@@ -41,6 +41,8 @@ dependencies:
   image_picker: ^1.1.2
   url_launcher: ^6.3.0
   file_picker: ^13.1.0
+  tflite_flutter: ^0.10.4
+  image: ^4.2.0
 
 dev_dependencies:
 
@@ -65,6 +67,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/model.tflite
+    - assets/labels.txt
 
   # To add assets to your application, add an assets section, like this:
   # assets:

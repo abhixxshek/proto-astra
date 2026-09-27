@@ -24,6 +24,25 @@ class DiseaseDetectionScreen extends StatefulWidget {
 class _DiseaseDetectionScreenState extends State<DiseaseDetectionScreen> {
   final ImagePicker _picker = ImagePicker();
 
+  String _selectedCrop = '-- All Crops --';
+  final List<String> _crops = [
+    '-- All Crops --',
+    'Apple',
+    'Tomato',
+    'Potato',
+    'Grape',
+    'Corn',
+    'Cherry',
+    'Peach',
+    'Pepper',
+    'Strawberry',
+    'Soybean',
+    'Squash',
+    'Orange',
+    'Blueberry',
+    'Raspberry'
+  ];
+
   Future<void> _pickImage(ImageSource source) async {
     try {
       final XFile? file = await _picker.pickImage(
@@ -115,11 +134,60 @@ class _DiseaseDetectionScreenState extends State<DiseaseDetectionScreen> {
             ),
             const SizedBox(height: 6),
             const Text(
-              'Upload or take a photo of a crop leaf. Our 39-class PyTorch Deep Convolutional Neural Network will analyze and identify diseases, symptoms, and organic treatment supplements.',
+              'Upload or take a photo of a crop leaf. Detection runs 100% locally from assets/model.tflite (38-class Deep CNN) to identify diseases, causes, fertilizer schedules, and treatments offline.',
               style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
+            // Crop Selection Filter Dropdown
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.primary.withAlpha(80)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withAlpha(8),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.filter_alt_outlined, color: AppColors.primary, size: 20),
+                  const SizedBox(width: 10),
+                  const Text(
+                    'Crop Filter: ',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.textPrimary),
+                  ),
+                  Expanded(
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: _selectedCrop,
+                        isExpanded: true,
+                        style: const TextStyle(fontSize: 13, color: AppColors.textPrimary, fontWeight: FontWeight.w600),
+                        items: _crops.map((String crop) {
+                          return DropdownMenuItem<String>(
+                            value: crop,
+                            child: Text(crop),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          if (newValue != null) {
+                            setState(() {
+                              _selectedCrop = newValue;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
 
             // Image Selection Card
             CustomCard(
@@ -226,7 +294,7 @@ class _DiseaseDetectionScreenState extends State<DiseaseDetectionScreen> {
                   ),
                   const SizedBox(height: 12),
                   OutlinedButton.icon(
-                    onPressed: diseaseProvider.isLoading ? null : () => diseaseProvider.loadDemoData(),
+                    onPressed: diseaseProvider.isLoading ? null : () => diseaseProvider.loadDemoData(selectedCrop: _selectedCrop),
                     icon: const Icon(Icons.science_outlined, size: 18, color: AppColors.primary),
                     label: const Text('Try Sample Demo Leaf (Instant Diagnosis)', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
                     style: OutlinedButton.styleFrom(
@@ -241,7 +309,7 @@ class _DiseaseDetectionScreenState extends State<DiseaseDetectionScreen> {
                     icon: Icons.search,
                     isLoading: diseaseProvider.isLoading,
                     onPressed: diseaseProvider.selectedImageBytes != null
-                        ? () => diseaseProvider.detectDisease()
+                        ? () => diseaseProvider.detectDisease(selectedCrop: _selectedCrop)
                         : null,
                   ),
                 ],
@@ -384,17 +452,74 @@ class _DiseaseDetectionScreenState extends State<DiseaseDetectionScreen> {
                     ),
                     const SizedBox(height: 18),
 
-                    // Description Box
-                    const Text(
-                      'Disease Overview',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      diseaseProvider.result!.description,
-                      style: const TextStyle(fontSize: 14, color: AppColors.textSecondary, height: 1.4),
-                    ),
-                    const SizedBox(height: 18),
+                    // Cause Section
+                    if (diseaseProvider.result!.cause.isNotEmpty) ...[
+                      const Text(
+                        'Root Cause & Etiology',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                      ),
+                      const SizedBox(height: 6),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.withAlpha(15),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.blue.withAlpha(60)),
+                        ),
+                        child: Text(
+                          diseaseProvider.result!.cause,
+                          style: const TextStyle(fontSize: 13, color: AppColors.textPrimary, height: 1.4),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+
+                    // Recommended Cultural & Fertilizer Guidance
+                    if (diseaseProvider.result!.recommendation.isNotEmpty) ...[
+                      const Text(
+                        'Cultural & Fertilizer Prescriptions',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                      ),
+                      const SizedBox(height: 6),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.green.withAlpha(15),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.green.withAlpha(60)),
+                        ),
+                        child: Text(
+                          diseaseProvider.result!.recommendation,
+                          style: const TextStyle(fontSize: 13, color: AppColors.textPrimary, height: 1.5),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+
+                    // Treatment Steps
+                    if (diseaseProvider.result!.treatment.isNotEmpty) ...[
+                      const Text(
+                        'Fungicide & Chemical Spray Schedule',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                      ),
+                      const SizedBox(height: 6),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.amber.withAlpha(20),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.amber.withAlpha(80)),
+                        ),
+                        child: Text(
+                          diseaseProvider.result!.treatment,
+                          style: const TextStyle(fontSize: 13, color: AppColors.textPrimary, height: 1.4, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
 
                     // Prevention Steps
                     const Text(

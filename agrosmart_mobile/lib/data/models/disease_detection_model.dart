@@ -60,6 +60,9 @@ class DiseasePredictionResponse {
   final String diseaseName;
   final double confidence;
   final String description;
+  final String cause;
+  final String recommendation;
+  final String treatment;
   final String prevention;
   final String diseaseImageUrl;
   final DiseaseSupplement supplement;
@@ -73,6 +76,9 @@ class DiseasePredictionResponse {
     required this.diseaseName,
     required this.confidence,
     required this.description,
+    this.cause = '',
+    this.recommendation = '',
+    this.treatment = '',
     required this.prevention,
     required this.diseaseImageUrl,
     required this.supplement,
@@ -89,6 +95,9 @@ class DiseasePredictionResponse {
       diseaseName: json['disease_name']?.toString() ?? 'Healthy / Unknown',
       confidence: (json['confidence'] as num?)?.toDouble() ?? 0.0,
       description: json['description']?.toString() ?? '',
+      cause: json['cause']?.toString() ?? json['symptoms']?.toString() ?? '',
+      recommendation: json['recommendation']?.toString() ?? json['prevention']?.toString() ?? '',
+      treatment: json['treatment']?.toString() ?? '',
       prevention: json['prevention']?.toString() ?? '',
       diseaseImageUrl: json['disease_image_url']?.toString() ?? '',
       supplement: DiseaseSupplement.fromJson(json['supplement'] as Map<String, dynamic>? ?? {}),
@@ -97,3 +106,4 @@ class DiseasePredictionResponse {
     );
   }
 }
+
