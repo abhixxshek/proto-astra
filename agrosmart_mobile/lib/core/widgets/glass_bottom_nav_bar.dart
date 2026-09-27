@@ -9,7 +9,7 @@ import '../../app/theme/app_typography.dart';
 enum GlassNavTab {
   dashboard,
   soilReport,
-  recommendations,
+
   store,
   profile,
 }
@@ -72,14 +72,7 @@ class GlassBottomNavBar extends StatelessWidget {
                     label: 'Soil Health',
                     route: AppRoutes.soilReport,
                   ),
-                  _buildNavItem(
-                    context,
-                    tab: GlassNavTab.recommendations,
-                    icon: CupertinoIcons.sparkles,
-                    activeIcon: CupertinoIcons.sparkles,
-                    label: 'AI Predict',
-                    route: AppRoutes.cropRecommend,
-                  ),
+
                   _buildNavItem(
                     context,
                     tab: GlassNavTab.store,

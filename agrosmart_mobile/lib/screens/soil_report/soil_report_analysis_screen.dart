@@ -840,37 +840,7 @@ class _SoilReportAnalysisScreenState extends State<SoilReportAnalysisScreen>
                   ],
                 ),
               ],
-              const SizedBox(height: 14),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      provider.setTargetPreselectedCrop(crop.cropName);
-                      Navigator.pushNamed(context, AppRoutes.yieldPredict);
-                    },
-                    icon: const Icon(CupertinoIcons.chart_bar_alt_fill, size: 14, color: AppColors.primary),
-                    label: Text('Forecast Yield', style: AppTypography.caption.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      side: const BorderSide(color: AppColors.primaryLight),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      provider.setTargetPreselectedCrop(crop.cropName);
-                      Navigator.pushNamed(context, AppRoutes.fertilizerRecommend);
-                    },
-                    icon: const Icon(CupertinoIcons.lab_flask, size: 14, color: AppColors.primary),
-                    label: Text('Fertilizer Plan', style: AppTypography.caption.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      side: const BorderSide(color: AppColors.primaryLight),
-                    ),
-                  ),
-                ],
-              ),
+
             ],
           ),
         );
@@ -951,16 +921,7 @@ class _SoilReportAnalysisScreenState extends State<SoilReportAnalysisScreen>
                   ],
                 ),
               )),
-          const SizedBox(height: 16),
-          GlassButton(
-            text: 'Open in Yield Predictor with this Data',
-            icon: CupertinoIcons.chart_bar_square_fill,
-            variant: GlassButtonVariant.secondary,
-            onPressed: () {
-              provider.setTargetPreselectedCrop(yieldResult.crop);
-              Navigator.pushNamed(context, AppRoutes.yieldPredict);
-            },
-          ),
+
         ],
       ),
     );

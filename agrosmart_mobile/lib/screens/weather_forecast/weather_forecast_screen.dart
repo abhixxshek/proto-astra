@@ -21,13 +21,13 @@ class WeatherForecastScreen extends StatefulWidget {
 }
 
 class _WeatherForecastScreenState extends State<WeatherForecastScreen> {
-  final _cityController = TextEditingController(text: 'Delhi');
+  final _cityController = TextEditingController(text: 'Idukki');
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<WeatherProvider>(context, listen: false).fetchForecast('Delhi');
+      Provider.of<WeatherProvider>(context, listen: false).fetchForecast('Idukki');
     });
   }
 

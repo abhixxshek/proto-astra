@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/routes/app_routes.dart';
 import '../../app/theme/app_colors.dart';
@@ -142,8 +144,8 @@ class DashboardScreen extends StatelessWidget {
 
                     // 2. Core Agronomic & AI Models
                     _buildSectionTitle(
-                      title: 'Agronomic AI Models',
-                      subtitle: 'Predictive intelligence & diagnostic computer vision',
+                      title: ' AI Model Analyse',
+                     // subtitle: 'Predictive intelligence & diagnostic computer vision',
                     ),
                     const SizedBox(height: 12),
 
@@ -151,11 +153,11 @@ class DashboardScreen extends StatelessWidget {
                     _buildWideActionCard(
                       context,
                       title: 'Soil Report Intelligence',
-                      subtitle: 'Upload Soil Test PDF -> Auto NPK extraction -> Combined AI Advisory',
+                      //subtitle: 'Upload Soil Test PDF -> Auto NPK extraction -> Combined AI Advisory',
                       icon: CupertinoIcons.doc_text_viewfinder,
                       accentColor: AppColors.primary,
                       route: AppRoutes.soilReport,
-                      badge: 'AI CARD',
+                      //badge: 'AI CARD',
                       badgeType: BadgeType.success,
                     ),
                     const SizedBox(height: 12),
@@ -163,106 +165,26 @@ class DashboardScreen extends StatelessWidget {
                     // Plant Leaf Disease Card
                     _buildWideActionCard(
                       context,
-                      title: 'Leaf Disease Diagnosis',
-                      subtitle: '39-class PyTorch Deep Learning leaf diagnosis & organic treatment',
+                      title: 'Leaf Disease Prediction',
+                      //subtitle: '39-class PyTorch Deep Learning leaf diagnosis & organic treatment',
                       icon: CupertinoIcons.bandage_fill,
                       accentColor: AppColors.iosRed,
                       route: AppRoutes.diseaseDetection,
-                      badge: 'VISION AI',
+                      //badge: 'VISION AI',
                       badgeType: BadgeType.error,
                     ),
                     const SizedBox(height: 14),
 
-                    // 2x2 Feature Grid (Crop, Fertilizer, Yield, Weather)
-                    GridView.count(
-                      crossAxisCount: 2,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                      childAspectRatio: 1.15,
+                    // Quick Actions
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildGridCard(
-                          context,
-                          title: 'Crop Rec.',
-                          subtitle: 'Soil & Climate ML',
-                          icon: CupertinoIcons.tree,
-                          accentColor: AppColors.primary,
-                          route: AppRoutes.cropRecommend,
-                        ),
-                        _buildGridCard(
-                          context,
-                          title: 'Fertilizer',
-                          subtitle: 'NPK Optimization',
-                          icon: CupertinoIcons.lab_flask,
-                          accentColor: AppColors.iosTeal,
-                          route: AppRoutes.fertilizerRecommend,
-                        ),
-                        _buildGridCard(
-                          context,
-                          title: 'Yield Predict',
-                          subtitle: 'Decision Tree Regressor',
-                          icon: CupertinoIcons.chart_bar_alt_fill,
-                          accentColor: AppColors.iosOrange,
-                          route: AppRoutes.yieldPredict,
-                        ),
-                        _buildGridCard(
-                          context,
-                          title: 'Weather',
-                          subtitle: '5-Day Forecast & Spray',
-                          icon: CupertinoIcons.cloud_sun_fill,
-                          accentColor: AppColors.iosBlue,
-                          route: AppRoutes.weatherForecast,
-                        ),
+                        _buildRoundAction(context, title: 'Weather', icon: CupertinoIcons.cloud_sun_fill, accentColor: AppColors.iosBlue, route: AppRoutes.weatherForecast),
+                        _buildRoundAction(context, title: 'Market', icon: CupertinoIcons.money_dollar_circle_fill, accentColor: AppColors.accent, route: AppRoutes.marketPrices),
+                        _buildRoundAction(context, title: 'Seed Store', icon: CupertinoIcons.cart_fill, accentColor: AppColors.secondary, route: AppRoutes.shopping),
+                        _buildRoundAction(context, title: 'Transport', icon: CupertinoIcons.car_detailed, accentColor: AppColors.iosTeal, route: AppRoutes.transport),
                       ],
-                    ),
-
-                    const SizedBox(height: 28),
-
-                    // 3. Farm Operations & Commerce Section
-                    _buildSectionTitle(
-                      title: 'Farm Operations & Commerce',
-                      subtitle: 'Real-time commodity mandi rates and certified farm inputs',
-                    ),
-                    const SizedBox(height: 12),
-
-                    _buildWideActionCard(
-                      context,
-                      title: 'APMC Mandi Spot Rates',
-                      subtitle: 'Daily wholesale market commodity rates across Indian mandis',
-                      icon: CupertinoIcons.money_dollar_circle_fill,
-                      accentColor: AppColors.accent,
-                      route: AppRoutes.marketPrices,
-                    ),
-                    const SizedBox(height: 12),
-
-                    _buildWideActionCard(
-                      context,
-                      title: 'Agri Seeds & Inputs Store',
-                      subtitle: 'Doorstep certified seeds, bio-fertilizers & knapsack sprayers',
-                      icon: CupertinoIcons.cart_fill,
-                      accentColor: AppColors.secondary,
-                      route: AppRoutes.shopping,
-                    ),
-                    const SizedBox(height: 12),
-
-                    _buildWideActionCard(
-                      context,
-                      title: 'Transport & Machinery Rental',
-                      subtitle: 'Book local tractors, combine harvesters & logistics trucks',
-                      icon: CupertinoIcons.car_detailed,
-                      accentColor: AppColors.iosTeal,
-                      route: AppRoutes.transport,
-                    ),
-                    const SizedBox(height: 12),
-
-                    _buildWideActionCard(
-                      context,
-                      title: 'Farm Activity Planner',
-                      subtitle: 'Organize crop sowing, irrigation, fertilizer & harvesting logs',
-                      icon: CupertinoIcons.calendar,
-                      accentColor: AppColors.iosPurple,
-                      route: AppRoutes.tasks,
                     ),
 
                     const SizedBox(height: 28),
@@ -274,46 +196,7 @@ class DashboardScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
 
-                    _buildWideActionCard(
-                      context,
-                      title: 'Farmer AI Assistant',
-                      subtitle: '24/7 intelligent chat for pest symptoms, soil prep & MSP rules',
-                      icon: CupertinoIcons.chat_bubble_2_fill,
-                      accentColor: AppColors.iosBlue,
-                      route: AppRoutes.chatbot,
-                    ),
-                    const SizedBox(height: 12),
-
-                    _buildWideActionCard(
-                      context,
-                      title: 'Live Agriculture News',
-                      subtitle: 'Verified agricultural bulletins from Krishi Jagran & ICAR',
-                      icon: CupertinoIcons.news_solid,
-                      accentColor: AppColors.primary,
-                      route: AppRoutes.news,
-                      badge: 'LIVE',
-                      badgeType: BadgeType.error,
-                    ),
-                    const SizedBox(height: 12),
-
-                    _buildWideActionCard(
-                      context,
-                      title: 'Agronomic Knowledge Hub',
-                      subtitle: 'ICAR Package of Practices for 50+ Cereals, Fruits & Pulses',
-                      icon: CupertinoIcons.book_fill,
-                      accentColor: AppColors.iosIndigo,
-                      route: AppRoutes.knowledge,
-                    ),
-                    const SizedBox(height: 12),
-
-                    _buildWideActionCard(
-                      context,
-                      title: 'Production Analytics',
-                      subtitle: 'Multi-year district crop yields, rainfall patterns & charts',
-                      icon: CupertinoIcons.chart_pie_fill,
-                      accentColor: AppColors.iosPurple,
-                      route: AppRoutes.analysis,
-                    ),
+                    const _LiveNewsCarousel(),
                   ]),
                 ),
               ),
@@ -332,7 +215,7 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle({required String title, required String subtitle}) {
+  Widget _buildSectionTitle({required String title, String? subtitle}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -343,13 +226,15 @@ class DashboardScreen extends StatelessWidget {
             letterSpacing: -0.2,
           ),
         ),
-        const SizedBox(height: 2),
-        Text(
-          subtitle,
-          style: AppTypography.footnote.copyWith(
-            color: AppColors.textSecondary,
+        if (subtitle != null) ...[
+          const SizedBox(height: 2),
+          Text(
+            subtitle,
+            style: AppTypography.footnote.copyWith(
+              color: AppColors.textSecondary,
+            ),
           ),
-        ),
+        ],
       ],
     );
   }
@@ -436,7 +321,7 @@ class DashboardScreen extends StatelessWidget {
   Widget _buildWideActionCard(
     BuildContext context, {
     required String title,
-    required String subtitle,
+    String? subtitle,
     required IconData icon,
     required Color accentColor,
     required String route,
@@ -483,15 +368,17 @@ class DashboardScreen extends StatelessWidget {
                       ),
                   ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: AppTypography.footnote.copyWith(
-                    color: AppColors.textSecondary,
+                if (subtitle != null) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: AppTypography.footnote.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                ],
               ],
             ),
           ),
@@ -502,59 +389,190 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGridCard(
+  Widget _buildRoundAction(
     BuildContext context, {
     required String title,
-    required String subtitle,
     required IconData icon,
     required Color accentColor,
     required String route,
   }) {
-    return GlassCard(
-      padding: const EdgeInsets.all(16),
+    return GestureDetector(
       onTap: () => Navigator.pushNamed(context, route),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: accentColor.withValues(alpha: 0.12),
-                  borderRadius: AppGlass.borderRadiusSm,
-                ),
-                child: Icon(icon, color: accentColor, size: 22),
+      child: SizedBox(
+        width: 72,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                color: accentColor.withValues(alpha: 0.12),
+                shape: BoxShape.circle,
+                border: Border.all(color: accentColor.withValues(alpha: 0.22), width: 1.0),
               ),
-              const Icon(CupertinoIcons.arrow_up_right, size: 14, color: AppColors.textTertiary),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: AppTypography.callout.copyWith(
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -0.2,
+              child: Icon(icon, color: accentColor, size: 28),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: AppTypography.caption.copyWith(fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LiveNewsCarousel extends StatefulWidget {
+  const _LiveNewsCarousel();
+
+  @override
+  State<_LiveNewsCarousel> createState() => _LiveNewsCarouselState();
+}
+
+class _LiveNewsCarouselState extends State<_LiveNewsCarousel> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+  Timer? _timer;
+
+  final List<Map<String, String>> _newsItems = [
+    {
+      'title': 'Government announces new MSP for Rabi crops 2026-27',
+      'source': 'Krishi Jagran',
+      'snippet': 'The cabinet has approved an increase in the Minimum Support Price (MSP) for all mandated Rabi crops...',
+      'imageUrl': 'https://images.unsplash.com/photo-1592982537447-6f2a6a0c5c1b?auto=format&fit=crop&w=400&q=80',
+      'url': 'https://krishijagran.com/',
+    },
+    {
+      'title': 'ICAR releases drought-resistant wheat varieties',
+      'source': 'ICAR News',
+      'snippet': 'New varieties promise better yields in rain-fed regions and require 20% less irrigation.',
+      'imageUrl': 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=400&q=80',
+      'url': 'https://icar.org.in/',
+    },
+    {
+      'title': 'Global fertilizer prices stabilize after recent dip',
+      'source': 'Agri Business',
+      'snippet': 'Farmers can expect consistent pricing for urea and DAP in the upcoming sowing season.',
+      'imageUrl': 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=400&q=80',
+      'url': 'https://www.agribusinessglobal.com/',
+    }
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _startAutoSlide();
+  }
+
+  void _startAutoSlide() {
+    _timer = Timer.periodic(const Duration(seconds: 4), (Timer timer) {
+      if (_pageController.hasClients) {
+        int nextPage = _currentPage + 1;
+        if (nextPage >= _newsItems.length) {
+          nextPage = 0;
+          _pageController.animateToPage(nextPage, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
+        } else {
+          _pageController.nextPage(duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _launchUrl(String urlString) async {
+    final uri = Uri.parse(urlString);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 260,
+      child: PageView.builder(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _currentPage = index;
+          });
+        },
+        itemCount: _newsItems.length,
+        itemBuilder: (context, index) {
+          final item = _newsItems[index];
+          return GestureDetector(
+            onTap: () => _launchUrl(item['url']!),
+            child: GlassCard(
+              margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+              padding: EdgeInsets.zero,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          Image.network(
+                            item['imageUrl']!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => Container(color: AppColors.primaryLight),
+                          ),
+                          Positioned(
+                            top: 12,
+                            left: 12,
+                            child: GlassBadge(
+                              label: item['source']!,
+                              type: BadgeType.error,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item['title']!,
+                              style: AppTypography.callout.copyWith(fontWeight: FontWeight.bold),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const Spacer(),
+                            Text(
+                              item['snippet']!,
+                              style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 2),
-              Text(
-                subtitle,
-                style: AppTypography.caption.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ],
+            ),
+          );
+        },
       ),
     );
   }

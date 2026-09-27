@@ -12,7 +12,7 @@ class WeatherService {
 
   Future<List<WeatherForecastItem>> fetchWeatherForecast(String city) async {
     final url =
-        '${ApiConfig.openWeatherBaseUrl}/forecast?q=$city&appid=${ApiConfig.openWeatherApiKey}&units=metric';
+        'https://api.open-meteo.com/v1/forecast?latitude=9.85&longitude=76.9667&daily=sunrise,sunset,rain_sum&hourly=temperature_2m,relative_humidity_2m,dew_point_2m,rain&current=wind_speed_10m&timezone=auto';
 
     try {
       final response = await _client.get(Uri.parse(url)).timeout(ApiConfig.connectionTimeout);
@@ -33,24 +33,30 @@ class WeatherService {
 
   List<WeatherForecastItem> _extractWeatherInfo(Map<String, dynamic> data) {
     List<WeatherForecastItem> forecast = [];
-    var list = data['list'] as List;
+    
+    final hourly = data['hourly'];
+    if (hourly == null) return forecast;
 
-    for (int i = 0; i < 3 && (i * 8) < list.length; i++) {
-      var entry = list[i * 8];
-      DateTime dt = DateTime.parse(entry['dt_txt']);
+    final times = hourly['time'] as List;
+    final temps = hourly['temperature_2m'] as List;
+    final hums = hourly['relative_humidity_2m'] as List;
+    final rains = hourly['rain'] as List;
+
+    // Get a few points, e.g. current time, +8h, +16h
+    for (int i = 0; i < 3 && (i * 8) < times.length; i++) {
+      int index = i * 8;
+      DateTime dt = DateTime.parse(times[index]);
       String formattedDate = DateFormat('dd-MM-yyyy hh:mm a').format(dt);
 
-      bool hasRain = false;
-      if (entry['rain'] != null && entry['rain']['3h'] != null) {
-        hasRain = (entry['rain']['3h'] as num) > 0;
-      }
+      bool hasRain = (rains[index] as num) > 0;
+      String weatherDesc = hasRain ? 'Rainy' : 'Clear / Cloudy';
 
       forecast.add(
         WeatherForecastItem(
           dateTime: formattedDate,
-          weather: entry['weather'][0]['description'] ?? '',
-          temperature: (entry['main']['temp'] as num).toDouble(),
-          humidity: (entry['main']['humidity'] as num).toInt(),
+          weather: weatherDesc,
+          temperature: (temps[index] as num).toDouble(),
+          humidity: (hums[index] as num).toInt(),
           rainfallExpected: hasRain,
         ),
       );

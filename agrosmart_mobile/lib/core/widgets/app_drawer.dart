@@ -135,24 +135,7 @@ class AppDrawer extends StatelessWidget {
                           route: AppRoutes.soilReport,
                           badge: 'AI CARD',
                         ),
-                        _buildDrawerTile(
-                          context,
-                          icon: CupertinoIcons.tree,
-                          title: 'Crop Recommendation',
-                          route: AppRoutes.cropRecommend,
-                        ),
-                        _buildDrawerTile(
-                          context,
-                          icon: CupertinoIcons.lab_flask,
-                          title: 'Fertilizer Recommendation',
-                          route: AppRoutes.fertilizerRecommend,
-                        ),
-                        _buildDrawerTile(
-                          context,
-                          icon: CupertinoIcons.chart_bar_alt_fill,
-                          title: 'Yield Prediction',
-                          route: AppRoutes.yieldPredict,
-                        ),
+
                         _buildDrawerTile(
                           context,
                           icon: CupertinoIcons.bandage_fill,
@@ -162,13 +145,7 @@ class AppDrawer extends StatelessWidget {
 
                         const SizedBox(height: 14),
                         _buildSectionHeader('FARM OPERATIONS & COMMERCE'),
-                        _buildDrawerTile(
-                          context,
-                          icon: CupertinoIcons.news_solid,
-                          title: 'Agri News Feeds',
-                          route: AppRoutes.news,
-                          badge: 'LIVE',
-                        ),
+
                         _buildDrawerTile(
                           context,
                           icon: CupertinoIcons.money_dollar_circle_fill,
@@ -181,42 +158,22 @@ class AppDrawer extends StatelessWidget {
                           title: 'Agri Inputs Store',
                           route: AppRoutes.shopping,
                         ),
-                        _buildDrawerTile(
-                          context,
-                          icon: CupertinoIcons.chat_bubble_2_fill,
-                          title: 'AgriBot AI Assistant',
-                          route: AppRoutes.chatbot,
-                        ),
-                        _buildDrawerTile(
-                          context,
-                          icon: CupertinoIcons.calendar,
-                          title: 'Farm Task Planner',
-                          route: AppRoutes.tasks,
-                        ),
+
+
                         _buildDrawerTile(
                           context,
                           icon: CupertinoIcons.car_detailed,
                           title: 'Transport & Rental',
                           route: AppRoutes.transport,
                         ),
-                        _buildDrawerTile(
-                          context,
-                          icon: CupertinoIcons.book_fill,
-                          title: 'Agronomic Knowledge Hub',
-                          route: AppRoutes.knowledge,
-                        ),
+
                         _buildDrawerTile(
                           context,
                           icon: CupertinoIcons.cloud_sun_fill,
                           title: 'Weather Forecast',
                           route: AppRoutes.weatherForecast,
                         ),
-                        _buildDrawerTile(
-                          context,
-                          icon: CupertinoIcons.chart_pie_fill,
-                          title: 'Agricultural Analytics',
-                          route: AppRoutes.analysis,
-                        ),
+
 
                         const SizedBox(height: 14),
                         _buildSectionHeader('ACCOUNT & SETTINGS'),

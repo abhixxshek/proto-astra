@@ -85,7 +85,7 @@ class ApiConfig {
     } catch (_) {}
   }
 
-  static const String openWeatherApiKey = '9736d84f2b387d052f9dfbfaea880970';
+  static const String openWeatherApiKey = 'YOUR_API_KEY_HERE';
   static const String openWeatherBaseUrl = 'https://api.openweathermap.org/data/2.5';
 
 
