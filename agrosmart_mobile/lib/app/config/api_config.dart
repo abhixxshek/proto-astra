@@ -4,10 +4,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiConfig {
   static const String defaultEmulatorUrl = 'http://10.0.2.2:5000/api/v1';
   static const String defaultLocalhostUrl = 'http://127.0.0.1:5000/api/v1';
+  static const String defaultEthernetUrl = 'http://10.83.121.162:5000/api/v1';
+  static const String defaultWifiUrl = 'http://10.185.229.196:5000/api/v1';
   static const String defaultLanUrl = 'http://10.83.121.231:5000/api/v1';
 
   static final List<String> candidateBaseUrls = [
     defaultLocalhostUrl,
+    defaultEthernetUrl,
+    defaultWifiUrl,
     defaultLanUrl,
     defaultEmulatorUrl,
   ];
@@ -16,30 +20,50 @@ class ApiConfig {
 
   static String get baseUrl => _baseUrl;
 
+  static Future<bool> _checkHealth(String url) async {
+    try {
+      final client = http.Client();
+      final healthUri = Uri.parse(url.replaceAll('/api/v1', '/api/v1/health'));
+      final res = await client.get(healthUri).timeout(const Duration(milliseconds: 1500));
+      client.close();
+      return res.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
+  }
+
   static Future<void> init() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final savedUrl = prefs.getString('custom_backend_url');
       if (savedUrl != null && savedUrl.isNotEmpty) {
-        _baseUrl = savedUrl;
-        return;
+        final isHealthy = await _checkHealth(savedUrl);
+        if (isHealthy) {
+          _baseUrl = savedUrl;
+          return;
+        } else {
+          // Stale IP or 404, clear saved preference so auto-detect runs
+          await prefs.remove('custom_backend_url');
+        }
       }
     } catch (_) {}
 
-    // Auto-detect reachable backend: 127.0.0.1 (ADB reverse/desktop) -> LAN Wi-Fi -> Emulator
-    try {
-      final client = http.Client();
-      for (final candidate in candidateBaseUrls) {
+    // Auto-detect reachable backend: 127.0.0.1 (ADB reverse/desktop) -> Ethernet -> Wi-Fi -> Emulator
+    await autoDetect();
+  }
+
+  static Future<String?> autoDetect() async {
+    for (final candidate in candidateBaseUrls) {
+      if (await _checkHealth(candidate)) {
+        _baseUrl = candidate;
         try {
-          final testUri = Uri.parse(candidate.replaceAll('/api/v1', '/api/v1/health'));
-          final res = await client.get(testUri).timeout(const Duration(milliseconds: 1200));
-          if (res.statusCode == 200) {
-            _baseUrl = candidate;
-            return;
-          }
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('custom_backend_url', candidate);
         } catch (_) {}
+        return candidate;
       }
-    } catch (_) {}
+    }
+    return null;
   }
 
   static Future<void> setBaseUrl(String newUrl) async {

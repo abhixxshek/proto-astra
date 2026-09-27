@@ -239,7 +239,7 @@ class ShoppingScreen extends StatelessWidget {
                         shopping.addToCart(product);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('✓ ${product.title} added to cart!'),
+                            content: Text('${product.title} added to cart'),
                             backgroundColor: const Color(0xFF2E7D32),
                             duration: const Duration(seconds: 1),
                           ),

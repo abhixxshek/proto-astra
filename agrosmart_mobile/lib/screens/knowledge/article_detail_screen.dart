@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../data/models/article_models.dart';
 
@@ -34,11 +35,11 @@ class ArticleDetailScreen extends StatelessWidget {
                   const SizedBox(height: 10),
                   Text(article.description, style: const TextStyle(fontSize: 13, color: Colors.black87, height: 1.4)),
                   const SizedBox(height: 16),
-                  _buildSection('🌱 Soil Requirements', article.soilRequirements),
-                  _buildSection('☀️ Climate & Temperature', article.climateTemperature),
-                  _buildSection('💧 Irrigation Schedule', article.irrigationDetails),
-                  _buildSection('🧪 Fertilizer & NPK Dosage', article.fertilizerGuide),
-                  _buildSection('🌾 Harvesting & Post-Harvest', article.harvestingDetails),
+                  _buildSection(CupertinoIcons.circle_grid_hex_fill, 'Soil Requirements', article.soilRequirements),
+                  _buildSection(CupertinoIcons.sun_max_fill, 'Climate & Temperature', article.climateTemperature),
+                  _buildSection(CupertinoIcons.drop_fill, 'Irrigation Schedule', article.irrigationDetails),
+                  _buildSection(CupertinoIcons.lab_flask_solid, 'Fertilizer & NPK Dosage', article.fertilizerGuide),
+                  _buildSection(CupertinoIcons.scissors, 'Harvesting & Post-Harvest', article.harvestingDetails),
                 ],
               ),
             ),
@@ -48,21 +49,30 @@ class ArticleDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSection(String title, String content) {
+  Widget _buildSection(IconData icon, String title, String content) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: Colors.grey.shade200),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1B5E20))),
-          const SizedBox(height: 4),
-          Text(content, style: const TextStyle(fontSize: 12, color: Colors.black87, height: 1.35)),
+          Row(
+            children: [
+              Icon(icon, size: 16, color: const Color(0xFF1B5E20)),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1B5E20)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(content, style: const TextStyle(fontSize: 12, color: Colors.black87, height: 1.4)),
         ],
       ),
     );

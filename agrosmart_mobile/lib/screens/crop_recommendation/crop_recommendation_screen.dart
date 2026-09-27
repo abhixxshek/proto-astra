@@ -32,15 +32,16 @@ class _CropRecommendationScreenState extends State<CropRecommendationScreen> {
   final _phController = TextEditingController(text: '6.5');
   final _rainfallController = TextEditingController(text: '202');
 
+  bool _isPrefilledFromSoil = false;
+
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final soilProvider = Provider.of<SoilReportProvider>(context, listen: false);
-      if (soilProvider.hasSoilData) {
-        _autofillFromSoilReport();
-      }
-    });
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final soilProvider = Provider.of<SoilReportProvider>(context);
+    if (!_isPrefilledFromSoil && soilProvider.hasSoilData) {
+      _autofillFromSoilReport();
+      _isPrefilledFromSoil = true;
+    }
   }
 
   void _autofillFromSoilReport() {
@@ -66,6 +67,7 @@ class _CropRecommendationScreenState extends State<CropRecommendationScreen> {
     if (soilProvider.rainfall != null) {
       _rainfallController.text = soilProvider.rainfall!.toStringAsFixed(0);
     }
+    _isPrefilledFromSoil = true;
     setState(() {});
   }
 
@@ -83,13 +85,24 @@ class _CropRecommendationScreenState extends State<CropRecommendationScreen> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
+      final ph = double.tryParse(_phController.text) ?? 0.0;
+      if (ph < 3.0 || ph > 11.0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Invalid soil pH: must be between 3.0 and 11.0'),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+        return;
+      }
+
       final req = CropRecommendationRequest(
         nitrogen: double.parse(_nitrogenController.text),
         phosphorus: double.parse(_phosphorusController.text),
         potassium: double.parse(_potassiumController.text),
         temperature: double.parse(_temperatureController.text),
         humidity: double.parse(_humidityController.text),
-        phValue: double.parse(_phController.text),
+        phValue: ph,
         rainfall: double.parse(_rainfallController.text),
       );
 

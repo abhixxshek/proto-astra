@@ -38,15 +38,16 @@ class _FertilizerRecommendationScreenState extends State<FertilizerRecommendatio
   final _potassiumController = TextEditingController(text: '0');
   final _phosphorousController = TextEditingController(text: '0');
 
+  bool _isPrefilledFromSoil = false;
+
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final soilProvider = Provider.of<SoilReportProvider>(context, listen: false);
-      if (soilProvider.hasSoilData || soilProvider.targetPreselectedCrop != null) {
-        _autofillFromSoilReport();
-      }
-    });
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final soilProvider = Provider.of<SoilReportProvider>(context);
+    if (!_isPrefilledFromSoil && (soilProvider.hasSoilData || soilProvider.targetPreselectedCrop != null)) {
+      _autofillFromSoilReport();
+      _isPrefilledFromSoil = true;
+    }
   }
 
   void _autofillFromSoilReport() {

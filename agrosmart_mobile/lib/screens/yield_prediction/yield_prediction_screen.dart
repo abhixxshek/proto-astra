@@ -53,6 +53,19 @@ class _YieldPredictionScreenState extends State<YieldPredictionScreen> {
     });
   }
 
+  bool _isPrefilledFromSoil = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final soilProvider = Provider.of<SoilReportProvider>(context);
+    final yieldProvider = Provider.of<YieldProvider>(context);
+    if (!_isPrefilledFromSoil && (soilProvider.hasSoilData || soilProvider.targetPreselectedCrop != null) && yieldProvider.items.isNotEmpty) {
+      _autofillFromSoilReport();
+      _isPrefilledFromSoil = true;
+    }
+  }
+
   void _autofillFromSoilReport() {
     final soilProvider = Provider.of<SoilReportProvider>(context, listen: false);
     final yieldProvider = Provider.of<YieldProvider>(context, listen: false);
@@ -266,12 +279,14 @@ class _YieldPredictionScreenState extends State<YieldPredictionScreen> {
   }
 
   Widget _buildDetailTile(String label, String value) {
-    return Column(
-      children: [
-        Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
-        const SizedBox(height: 2),
-        Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-      ],
+    return Expanded(
+      child: Column(
+        children: [
+          Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
+          const SizedBox(height: 2),
+          Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary), maxLines: 1, overflow: TextOverflow.ellipsis),
+        ],
+      ),
     );
   }
 }

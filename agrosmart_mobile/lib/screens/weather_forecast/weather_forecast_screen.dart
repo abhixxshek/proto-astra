@@ -1,12 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../app/routes/app_routes.dart';
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_glass.dart';
+import '../../app/theme/app_typography.dart';
 import '../../core/widgets/app_drawer.dart';
-import '../../core/widgets/custom_button.dart';
-import '../../core/widgets/custom_card.dart';
-import '../../core/widgets/custom_text_field.dart';
+import '../../core/widgets/glass_badge.dart';
+import '../../core/widgets/glass_button.dart';
+import '../../core/widgets/glass_card.dart';
+import '../../core/widgets/glass_text_field.dart';
 import '../../providers/weather_provider.dart';
 
 class WeatherForecastScreen extends StatefulWidget {
@@ -47,91 +51,100 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Weather & Spray Advice'),
+        title: Text(
+          'Agro-Weather & Spray Radar',
+          style: AppTypography.headline.copyWith(fontWeight: FontWeight.bold),
+        ),
       ),
       drawer: const AppDrawer(currentRoute: AppRoutes.weatherForecast),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(18),
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Agro-Weather Forecast',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+            Text(
+              'Hyperlocal Weather Radar',
+              style: AppTypography.largeTitle.copyWith(fontSize: 26, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 6),
-            const Text(
-              '3-day weather forecast with automated rain detection to optimize fertilizer application timing.',
-              style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+            const SizedBox(height: 4),
+            Text(
+              '5-day meteorological forecast to determine optimal spray & fertilizer windows.',
+              style: AppTypography.footnote.copyWith(color: AppColors.textSecondary),
             ),
             const SizedBox(height: 18),
 
-            // Search Bar Card
-            CustomCard(
+            // Search Bar Glass Card
+            GlassCard(
+              padding: const EdgeInsets.all(16),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Expanded(
-                    child: CustomTextField(
+                    child: GlassTextField(
                       controller: _cityController,
-                      label: 'Target City / Location',
-                      hint: 'e.g. Delhi, Mumbai, Punjab',
-                      prefixIcon: Icons.location_city,
+                      label: 'Target Location / City',
+                      hintText: 'e.g. Indore, Pune, Punjab',
+                      prefixIcon: CupertinoIcons.location_solid,
+                      onEditingComplete: _search,
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 22),
-                    child: CustomButton(
-                      text: 'Search',
-                      width: 90,
-                      isLoading: weatherProvider.isLoading,
-                      onPressed: _search,
-                    ),
+                  const SizedBox(width: 10),
+                  GlassButton(
+                    text: 'Search',
+                    icon: CupertinoIcons.search,
+                    width: 105,
+                    isLoading: weatherProvider.isLoading,
+                    onPressed: _search,
                   ),
                 ],
               ),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 22),
 
             if (weatherProvider.isLoading) ...[
               const Center(
                 child: Padding(
-                  padding: EdgeInsets.all(32),
-                  child: CircularProgressIndicator(),
-                ),
-              )
-            ] else if (weatherProvider.errorMessage != null) ...[
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Text(
-                    weatherProvider.errorMessage!,
-                    style: const TextStyle(color: AppColors.error, fontSize: 16),
+                  padding: EdgeInsets.all(40),
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
                   ),
                 ),
-              )
+              ),
+            ] else if (weatherProvider.errorMessage != null) ...[
+              GlassCard(
+                fillColor: AppColors.errorLight.withValues(alpha: 0.8),
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    const Icon(CupertinoIcons.exclamationmark_circle_fill, color: AppColors.error, size: 24),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        weatherProvider.errorMessage!,
+                        style: AppTypography.callout.copyWith(color: AppColors.error),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ] else if (weatherProvider.forecast.isNotEmpty) ...[
+              // Current Hero Weather Card
+              _buildCurrentWeatherHero(weatherProvider),
+              const SizedBox(height: 22),
+
               Text(
-                'Forecast for ${weatherProvider.currentCity}',
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                'Upcoming Forecast Windows',
+                style: AppTypography.title3.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
+
               ...weatherProvider.forecast.map((item) {
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 16),
+                final isRain = item.rainfallExpected;
+                return GlassCard(
+                  margin: const EdgeInsets.only(bottom: 12),
                   padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -140,77 +153,93 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen> {
                         children: [
                           Row(
                             children: [
-                              Icon(
-                                item.rainfallExpected ? Icons.grain : Icons.wb_sunny,
-                                color: item.rainfallExpected ? Colors.blue : Colors.orange,
-                                size: 28,
+                              Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: isRain
+                                      ? AppColors.iosBlue.withValues(alpha: 0.12)
+                                      : AppColors.iosOrange.withValues(alpha: 0.12),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  isRain ? CupertinoIcons.cloud_rain_fill : CupertinoIcons.sun_max_fill,
+                                  color: isRain ? AppColors.iosBlue : AppColors.iosOrange,
+                                  size: 22,
+                                ),
                               ),
-                              const SizedBox(width: 10),
-                              Text(
-                                item.dateTime,
-                                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                              const SizedBox(width: 12),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item.dateTime,
+                                    style: AppTypography.callout.copyWith(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    item.weather,
+                                    style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
                               color: AppColors.primary.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: AppGlass.borderRadiusPill,
                             ),
                             child: Text(
-                              '${item.temperature}°C',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                              '${item.temperature.toStringAsFixed(1)}°C',
+                              style: AppTypography.headline.copyWith(
                                 color: AppColors.primary,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Text('Condition: ${item.weather}', style: const TextStyle(fontSize: 14)),
-                          const Spacer(),
-                          Text('Humidity: ${item.humidity}%', style: const TextStyle(fontSize: 14)),
-                        ],
-                      ),
                       const SizedBox(height: 14),
 
-                      // Fertilizer Application Advice Highlight Box
+                      // Metrics Row
+                      Row(
+                        children: [
+                          const Icon(CupertinoIcons.drop_fill, size: 14, color: AppColors.iosBlue),
+                          const SizedBox(width: 4),
+                          Text('Humidity: ${item.humidity}%', style: AppTypography.footnote),
+                          const Spacer(),
+                          GlassBadge(
+                            label: isRain ? 'POSTPONE SPRAY' : 'SAFE TO SPRAY',
+                            type: isRain ? BadgeType.error : BadgeType.success,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+
+                      // Recommendation Banner
                       Container(
                         width: double.infinity,
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
-                          color: item.rainfallExpected
-                              ? Colors.red.shade50
-                              : Colors.green.shade50,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: item.rainfallExpected
-                                ? Colors.red.shade300
-                                : Colors.green.shade300,
-                          ),
+                          color: isRain ? AppColors.errorLight.withValues(alpha: 0.7) : AppColors.primaryMuted.withValues(alpha: 0.7),
+                          borderRadius: AppGlass.borderRadiusSm,
                         ),
                         child: Row(
                           children: [
                             Icon(
-                              item.rainfallExpected ? Icons.warning_amber_rounded : Icons.check_circle_outline,
-                              color: item.rainfallExpected ? Colors.red.shade700 : Colors.green.shade700,
-                              size: 20,
+                              isRain ? CupertinoIcons.exclamationmark_triangle_fill : CupertinoIcons.checkmark_circle_fill,
+                              color: isRain ? AppColors.error : AppColors.primary,
+                              size: 14,
                             ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                item.rainfallExpected
-                                    ? 'Rainfall expected. Postpone fertilizer application to prevent nutrient runoff.'
-                                    : 'No rainfall expected. Safe window for fertilizer & pesticide application.',
-                                style: TextStyle(
-                                  fontSize: 13,
+                                isRain
+                                    ? 'Precipitation predicted. Hold fertilizer application to avoid nutrient runoff.'
+                                    : 'Ideal meteorological conditions for spraying and foliar feeding.',
+                                style: AppTypography.caption.copyWith(
                                   fontWeight: FontWeight.w600,
-                                  color: item.rainfallExpected ? Colors.red.shade800 : Colors.green.shade800,
+                                  color: isRain ? AppColors.error : AppColors.primaryDark,
                                 ),
                               ),
                             ),
@@ -224,6 +253,83 @@ class _WeatherForecastScreenState extends State<WeatherForecastScreen> {
             ],
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildCurrentWeatherHero(WeatherProvider provider) {
+    final first = provider.forecast.first;
+    final isRain = first.rainfallExpected;
+
+    return GlassCard(
+      padding: const EdgeInsets.all(22),
+      gradient: isRain
+          ? const LinearGradient(
+              colors: [Color(0xFF2C3E50), Color(0xFF3498DB)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            )
+          : AppColors.primaryGradient,
+      shadows: AppGlass.emeraldGlow,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    provider.currentCity,
+                    style: AppTypography.title2.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    first.weather,
+                    style: AppTypography.footnote.copyWith(
+                      color: Colors.white.withValues(alpha: 0.85),
+                    ),
+                  ),
+                ],
+              ),
+              Icon(
+                isRain ? CupertinoIcons.cloud_rain_fill : CupertinoIcons.sun_max_fill,
+                color: isRain ? Colors.lightBlueAccent : Colors.amber,
+                size: 44,
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            '${first.temperature.toStringAsFixed(1)}°C',
+            style: AppTypography.largeTitle.copyWith(
+              fontSize: 42,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              const Icon(CupertinoIcons.drop, size: 14, color: Colors.white70),
+              const SizedBox(width: 4),
+              Text(
+                'Humidity ${first.humidity}%',
+                style: AppTypography.caption.copyWith(color: Colors.white70),
+              ),
+              const SizedBox(width: 16),
+              const Icon(CupertinoIcons.wind, size: 14, color: Colors.white70),
+              const SizedBox(width: 4),
+              Text(
+                'Agronomic Spray Window',
+                style: AppTypography.caption.copyWith(color: Colors.white70),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

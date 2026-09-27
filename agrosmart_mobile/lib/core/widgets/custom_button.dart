@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../app/theme/app_colors.dart';
+import 'glass_button.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -23,45 +24,14 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return GlassButton(
+      text: text,
+      onPressed: onPressed,
+      isLoading: isLoading,
+      icon: icon,
       width: width,
-      height: 52,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor ?? AppColors.primary,
-          foregroundColor: textColor ?? Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
-        onPressed: isLoading ? null : onPressed,
-        child: isLoading
-            ? const SizedBox(
-                height: 24,
-                width: 24,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.5,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (icon != null) ...[
-                    Icon(icon, size: 20),
-                    const SizedBox(width: 8),
-                  ],
-                  Text(
-                    text,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: textColor ?? Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-      ),
+      customColor: backgroundColor ?? AppColors.primary,
+      variant: GlassButtonVariant.primary,
     );
   }
 }

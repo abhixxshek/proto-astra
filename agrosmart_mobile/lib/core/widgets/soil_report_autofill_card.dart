@@ -1,7 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/soil_report_provider.dart';
 import '../../app/routes/app_routes.dart';
+import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_glass.dart';
+import '../../app/theme/app_typography.dart';
+import 'glass_card.dart';
+import 'glass_badge.dart';
 
 class SoilReportAutofillCard extends StatelessWidget {
   final VoidCallback onAutofill;
@@ -27,125 +33,146 @@ class SoilReportAutofillCard extends StatelessWidget {
       final summaryList = [n, p, k, ph, soilType].whereType<String>().toList();
       final summaryStr = summaryList.isNotEmpty ? summaryList.join(' • ') : 'Verified Profile';
 
-      return Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        decoration: BoxDecoration(
-          color: const Color(0xFFE8F5E9),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFA5D6A7)),
-        ),
+      return GlassCard(
+        margin: const EdgeInsets.only(bottom: 18),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        fillColor: AppColors.primaryMuted.withValues(alpha: 0.75),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.25), width: 1.0),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
-              decoration: const BoxDecoration(
-                color: Color(0xFF2E7D32),
-                shape: BoxShape.circle,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: AppGlass.borderRadiusSm,
+                boxShadow: AppGlass.softShadow,
               ),
-              child: const Icon(Icons.auto_awesome, color: Colors.white, size: 16),
+              child: const Icon(CupertinoIcons.sparkles, color: Colors.white, size: 18),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    spacing: 6,
-                    runSpacing: 4,
+                  Row(
                     children: [
-                      const Text(
-                        'Verified Soil Report Available',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1B5E20),
+                      Expanded(
+                        child: Text(
+                          'Soil Health Data Synced',
+                          style: AppTypography.caption.copyWith(
+                            color: AppColors.primaryDark,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.2,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFC8E6C9),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Text(
-                          'AI Synced',
-                          style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Color(0xFF1B5E20)),
-                        ),
+                      const SizedBox(width: 6),
+                      const GlassBadge(
+                        label: 'AI ACTIVE',
+                        type: BadgeType.success,
                       ),
                     ],
                   ),
                   const SizedBox(height: 3),
                   Text(
                     summaryStr,
+                    style: AppTypography.footnote.copyWith(
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.w600,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 11, color: Colors.black87),
                   ),
                 ],
               ),
             ),
             const SizedBox(width: 8),
-            ElevatedButton(
-              onPressed: () {
-                onAutofill();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('✓ Form prefilled from verified Soil Test Profile!'),
-                    backgroundColor: Color(0xFF2E7D32),
-                    duration: Duration(seconds: 2),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF2E7D32),
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                minimumSize: const Size(64, 30),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                elevation: 0,
+            GestureDetector(
+              onTap: onAutofill,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: AppGlass.borderRadiusPill,
+                  boxShadow: AppGlass.softShadow,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(CupertinoIcons.arrow_down_doc_fill, size: 13, color: Colors.white),
+                    const SizedBox(width: 5),
+                    Text(
+                      'Apply',
+                      style: AppTypography.caption.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              child: const Text('Autofill', style: TextStyle(fontSize: 11, color: Colors.white, fontWeight: FontWeight.bold)),
             ),
           ],
         ),
       );
     }
 
-    // When no soil report is present yet, show an invitation card
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
+    // Prompts farmer to upload soil report
+    return GlassCard(
+      margin: const EdgeInsets.only(bottom: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      fillColor: Colors.white.withValues(alpha: 0.8),
       child: Row(
         children: [
-          const Icon(Icons.picture_as_pdf_outlined, color: Color(0xFF2E7D32), size: 20),
-          const SizedBox(width: 10),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.1),
+              borderRadius: AppGlass.borderRadiusSm,
+            ),
+            child: const Icon(CupertinoIcons.doc_text_viewfinder, color: AppColors.primary, size: 20),
+          ),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Have a Soil Test Report (PDF)?',
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87),
-                ),
                 Text(
-                  'Upload in Soil Report Intelligence to autofill $featureName automatically.',
-                  style: const TextStyle(fontSize: 11, color: Colors.black54),
+                  'Have a Soil Test Report?',
+                  style: AppTypography.subhead.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Upload PDF to autofill $featureName parameters.',
+                  style: AppTypography.footnote.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
           ),
-          TextButton(
-            onPressed: () => Navigator.pushNamed(context, AppRoutes.soilReport),
-            style: TextButton.styleFrom(padding: EdgeInsets.zero, visualDensity: VisualDensity.compact),
-            child: const Text(
-              'Upload PDF',
-              style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF2E7D32)),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: () => Navigator.pushNamed(context, AppRoutes.soilReport),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: AppGlass.borderRadiusPill,
+                border: Border.all(color: AppColors.primary.withValues(alpha: 0.35), width: 1.0),
+              ),
+              child: Text(
+                'Upload PDF',
+                style: AppTypography.caption.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
         ],

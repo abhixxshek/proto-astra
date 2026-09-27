@@ -224,7 +224,18 @@ class _DiseaseDetectionScreenState extends State<DiseaseDetectionScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    onPressed: diseaseProvider.isLoading ? null : () => diseaseProvider.loadDemoData(),
+                    icon: const Icon(Icons.science_outlined, size: 18, color: AppColors.primary),
+                    label: const Text('Try Sample Demo Leaf (Instant Diagnosis)', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      side: BorderSide(color: AppColors.primary.withAlpha(120)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
                   CustomButton(
                     text: 'Diagnose Plant Disease',
                     icon: Icons.search,

@@ -61,6 +61,57 @@ class DiseaseProvider extends ChangeNotifier {
   }
 
 
+  Future<void> loadDemoData() async {
+    _isLoading = true;
+    _errorMessage = null;
+    _result = null;
+    _selectedFileName = 'sample_potato_late_blight_leaf.jpg';
+    notifyListeners();
+
+    await Future.delayed(const Duration(milliseconds: 600));
+
+    _result = DiseasePredictionResponse.fromJson({
+      'success': true,
+      'prediction_index': 12,
+      'raw_class_label': 'Potato___Late_blight',
+      'disease_name': 'Potato Late Blight (Phytophthora infestans)',
+      'confidence': 97.4,
+      'description': 'Dark, water-soaked irregular lesions appearing on leaf tips and margins. Leaves quickly brown, shrivel, and die during humid conditions.',
+      'prevention': '1. Use certified disease-free seed tubers.\n2. Ensure proper row spacing and drainage.\n3. Apply protective fungicide before canopy closure.\n4. Destroy infected crop residue immediately post-harvest.',
+      'disease_image_url': 'https://images.unsplash.com/photo-1592417817098-8f3d6ef23a8d?w=600',
+      'supplement': {
+        'name': 'Mancozeb 75% WP Protective Fungicide (Ridomil Gold)',
+        'image_url': 'https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?w=300',
+        'buy_link': 'https://www.amazon.in/s?k=Mancozeb+75+WP+Fungicide',
+        'amazon_buy_link': 'https://www.amazon.in/s?k=Mancozeb+75+WP+Fungicide',
+        'amazon_search_query': 'Mancozeb 75 WP Fungicide'
+      },
+      'top_predictions': [
+        {
+          'index': 12,
+          'class_label': 'Potato___Late_blight',
+          'disease_name': 'Potato Late Blight',
+          'confidence': 97.4
+        },
+        {
+          'index': 11,
+          'class_label': 'Potato___Early_blight',
+          'disease_name': 'Potato Early Blight',
+          'confidence': 2.1
+        },
+        {
+          'index': 13,
+          'class_label': 'Potato___healthy',
+          'disease_name': 'Healthy Potato Leaf',
+          'confidence': 0.5
+        }
+      ]
+    });
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
   void reset() {
     _selectedImageBytes = null;
     _selectedFileName = null;

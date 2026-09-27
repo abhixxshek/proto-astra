@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:io' show File;
 import 'package:flutter/foundation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -197,28 +197,42 @@ class SoilReportProvider extends ChangeNotifier {
   Future<void> pickAndUploadPdf() async {
     try {
       _setError(null);
-      final FilePickerResult? result = await FilePicker.pickFiles(
+      final PlatformFile? file = await FilePicker.pickFile(
         type: FileType.custom,
-        allowedExtensions: ['pdf'],
-        withData: true,
+        allowedExtensions: ['pdf', 'PDF'],
       );
 
-      if (result == null || result.files.isEmpty) return;
+      if (file == null) return;
 
-      final file = result.files.first;
       _selectedFilename = file.name;
+      _setLoading(true, 'Reading selected file...');
 
-      List<int>? bytes = file.bytes;
-      if ((bytes == null || bytes.isEmpty) && file.path != null && file.path!.isNotEmpty) {
-        bytes = await File(file.path!).readAsBytes();
+      List<int>? bytes;
+      try {
+        bytes = await file.readAsBytes();
+      } catch (_) {}
+
+      if (bytes == null || bytes.isEmpty) {
+        try {
+          bytes = await file.xFile.readAsBytes();
+        } catch (_) {}
+      }
+
+      if ((bytes == null || bytes.isEmpty) && !kIsWeb && file.path != null) {
+        try {
+          final ioFile = File(file.path!);
+          if (await ioFile.exists()) {
+            bytes = await ioFile.readAsBytes();
+          }
+        } catch (_) {}
       }
 
       if (bytes == null || bytes.isEmpty) {
-        _setError('Unable to read selected PDF file.');
+        _setError('Unable to read selected PDF file. Please ensure storage permissions are granted.');
         return;
       }
 
-      _setLoading(true, 'Validating and analyzing Soil Report PDF...');
+      _setLoading(true, 'Extracting soil parameters and verifying lab data...');
 
       _uploadData = await _service.uploadSoilReportPdf(
         bytes: bytes,
@@ -231,7 +245,8 @@ class SoilReportProvider extends ChangeNotifier {
       await _persistSoilProfile();
       notifyListeners();
     } catch (e) {
-      _setError('PDF Analysis failed: ${e.toString()}');
+      final cleanMsg = e.toString().replaceFirst('ApiException: ', '');
+      _setError(cleanMsg);
     }
   }
 

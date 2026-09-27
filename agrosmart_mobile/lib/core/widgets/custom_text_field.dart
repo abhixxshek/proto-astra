@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'glass_text_field.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -24,30 +25,26 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF2C3E50),
-          ),
-        ),
-        const SizedBox(height: 6),
-        TextFormField(
-          controller: controller,
-          keyboardType: keyboardType,
-          obscureText: obscureText,
-          validator: validator,
-          decoration: InputDecoration(
-            hintText: hint,
-            suffixText: suffixText,
-            prefixIcon: prefixIcon != null ? Icon(prefixIcon, color: const Color(0xFF556B58)) : null,
-          ),
-        ),
-      ],
+    return GlassTextField(
+      controller: controller,
+      label: label,
+      hintText: hint,
+      prefixIcon: prefixIcon,
+      suffix: suffixText != null
+          ? Padding(
+              padding: const EdgeInsets.only(right: 14),
+              child: Center(
+                widthFactor: 1.0,
+                child: Text(
+                  suffixText!,
+                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.black54),
+                ),
+              ),
+            )
+          : null,
+      keyboardType: keyboardType,
+      obscureText: obscureText,
+      validator: validator,
     );
   }
 }

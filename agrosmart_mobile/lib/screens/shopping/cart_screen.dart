@@ -138,7 +138,7 @@ class CartScreen extends StatelessWidget {
                             shopping.clearCart();
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text('🎉 Order Placed Successfully! Cash on Delivery confirmed.'),
+                                content: Text('Order Placed Successfully! Cash on Delivery confirmed.'),
                                 backgroundColor: Color(0xFF2E7D32),
                               ),
                             );

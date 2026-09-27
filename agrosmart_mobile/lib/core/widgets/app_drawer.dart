@@ -1,10 +1,16 @@
+import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../app/routes/app_routes.dart';
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_glass.dart';
+import '../../app/theme/app_typography.dart';
 import '../../providers/auth_provider.dart';
+import 'glass_badge.dart';
 
+/// Premium iOS Frosted Glass App Drawer
 class AppDrawer extends StatelessWidget {
   final String currentRoute;
 
@@ -16,159 +22,276 @@ class AppDrawer extends StatelessWidget {
     final user = authProvider.currentUser;
 
     return Drawer(
-      child: Column(
-        children: [
-          UserAccountsDrawerHeader(
-            decoration: const BoxDecoration(
-              gradient: AppColors.primaryGradient,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      width: MediaQuery.of(context).size.width * 0.82,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.horizontal(right: Radius.circular(28)),
+      ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.horizontal(right: Radius.circular(28)),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: AppGlass.blurHeavy,
+            sigmaY: AppGlass.blurHeavy,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.94),
+              border: const Border(
+                right: BorderSide(color: AppColors.glassBorderLight, width: 1.2),
+              ),
             ),
-            accountName: Text(
-              user?.username ?? 'Farmer User',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            accountEmail: Text(user?.email ?? 'farmer@agrosmart.org'),
-            currentAccountPicture: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Text(
-                (user?.username.isNotEmpty ?? false) ? user!.username[0].toUpperCase() : 'A',
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primary,
-                ),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  // User Profile iOS Header Card
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        gradient: AppColors.heroGradient,
+                        borderRadius: AppGlass.borderRadiusLg,
+                        boxShadow: AppGlass.emeraldGlow,
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 52,
+                            height: 52,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: AppGlass.softShadow,
+                            ),
+                            child: Center(
+                              child: Text(
+                                (user?.username.isNotEmpty ?? false)
+                                    ? user!.username[0].toUpperCase()
+                                    : 'A',
+                                style: AppTypography.title2.copyWith(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  user?.username ?? 'Farmer User',
+                                  style: AppTypography.title3.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  user?.email ?? 'farmer@agrosmart.org',
+                                  style: AppTypography.footnote.copyWith(
+                                    color: Colors.white.withValues(alpha: 0.8),
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 6),
+                                const GlassBadge(
+                                  label: 'PRO FARMER',
+                                  icon: CupertinoIcons.sparkles,
+                                  type: BadgeType.neutral,
+                                  customColor: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Grouped Navigation Items (iOS List Section Style)
+                  Expanded(
+                    child: ListView(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      physics: const BouncingScrollPhysics(),
+                      children: [
+                        _buildSectionHeader('CORE INTELLIGENCE'),
+                        _buildDrawerTile(
+                          context,
+                          icon: CupertinoIcons.house_fill,
+                          title: 'Dashboard',
+                          route: AppRoutes.dashboard,
+                        ),
+                        _buildDrawerTile(
+                          context,
+                          icon: CupertinoIcons.doc_text_viewfinder,
+                          title: 'Soil Health Card AI',
+                          route: AppRoutes.soilReport,
+                          badge: 'AI CARD',
+                        ),
+                        _buildDrawerTile(
+                          context,
+                          icon: CupertinoIcons.tree,
+                          title: 'Crop Recommendation',
+                          route: AppRoutes.cropRecommend,
+                        ),
+                        _buildDrawerTile(
+                          context,
+                          icon: CupertinoIcons.lab_flask,
+                          title: 'Fertilizer Recommendation',
+                          route: AppRoutes.fertilizerRecommend,
+                        ),
+                        _buildDrawerTile(
+                          context,
+                          icon: CupertinoIcons.chart_bar_alt_fill,
+                          title: 'Yield Prediction',
+                          route: AppRoutes.yieldPredict,
+                        ),
+                        _buildDrawerTile(
+                          context,
+                          icon: CupertinoIcons.bandage_fill,
+                          title: 'Plant Leaf Disease',
+                          route: AppRoutes.diseaseDetection,
+                        ),
+
+                        const SizedBox(height: 14),
+                        _buildSectionHeader('FARM OPERATIONS & COMMERCE'),
+                        _buildDrawerTile(
+                          context,
+                          icon: CupertinoIcons.news_solid,
+                          title: 'Agri News Feeds',
+                          route: AppRoutes.news,
+                          badge: 'LIVE',
+                        ),
+                        _buildDrawerTile(
+                          context,
+                          icon: CupertinoIcons.money_dollar_circle_fill,
+                          title: 'Mandi Market Rates',
+                          route: AppRoutes.marketPrices,
+                        ),
+                        _buildDrawerTile(
+                          context,
+                          icon: CupertinoIcons.cart_fill,
+                          title: 'Agri Inputs Store',
+                          route: AppRoutes.shopping,
+                        ),
+                        _buildDrawerTile(
+                          context,
+                          icon: CupertinoIcons.chat_bubble_2_fill,
+                          title: 'AgriBot AI Assistant',
+                          route: AppRoutes.chatbot,
+                        ),
+                        _buildDrawerTile(
+                          context,
+                          icon: CupertinoIcons.calendar,
+                          title: 'Farm Task Planner',
+                          route: AppRoutes.tasks,
+                        ),
+                        _buildDrawerTile(
+                          context,
+                          icon: CupertinoIcons.car_detailed,
+                          title: 'Transport & Rental',
+                          route: AppRoutes.transport,
+                        ),
+                        _buildDrawerTile(
+                          context,
+                          icon: CupertinoIcons.book_fill,
+                          title: 'Agronomic Knowledge Hub',
+                          route: AppRoutes.knowledge,
+                        ),
+                        _buildDrawerTile(
+                          context,
+                          icon: CupertinoIcons.cloud_sun_fill,
+                          title: 'Weather Forecast',
+                          route: AppRoutes.weatherForecast,
+                        ),
+                        _buildDrawerTile(
+                          context,
+                          icon: CupertinoIcons.chart_pie_fill,
+                          title: 'Agricultural Analytics',
+                          route: AppRoutes.analysis,
+                        ),
+
+                        const SizedBox(height: 14),
+                        _buildSectionHeader('ACCOUNT & SETTINGS'),
+                        _buildDrawerTile(
+                          context,
+                          icon: CupertinoIcons.person_crop_circle_fill,
+                          title: 'My Profile',
+                          route: AppRoutes.profile,
+                        ),
+                        _buildDrawerTile(
+                          context,
+                          icon: CupertinoIcons.question_circle_fill,
+                          title: 'Help & Support',
+                          route: AppRoutes.help,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Bottom Logout Pill
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.errorLight.withValues(alpha: 0.6),
+                        borderRadius: AppGlass.borderRadiusPill,
+                        border: Border.all(
+                          color: AppColors.error.withValues(alpha: 0.2),
+                          width: 1.0,
+                        ),
+                      ),
+                      child: ListTile(
+                        dense: true,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: AppGlass.borderRadiusPill,
+                        ),
+                        leading: const Icon(CupertinoIcons.power, color: AppColors.error, size: 20),
+                        title: Text(
+                          'Sign Out',
+                          style: AppTypography.headline.copyWith(
+                            color: AppColors.error,
+                            fontSize: 14,
+                          ),
+                        ),
+                        onTap: () {
+                          authProvider.logout();
+                          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (route) => false);
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.dashboard_outlined,
-                  title: 'Dashboard',
-                  route: AppRoutes.dashboard,
-                ),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.document_scanner_outlined,
-                  title: 'Soil Report Intelligence',
-                  route: AppRoutes.soilReport,
-                  badge: 'AI CARD',
-                ),
-                const Divider(),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.newspaper_outlined,
-                  title: 'Live Agriculture News',
-                  route: AppRoutes.news,
-                  badge: 'LIVE',
-                ),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.storefront_outlined,
-                  title: 'APMC Mandi Market Rates',
-                  route: AppRoutes.marketPrices,
-                ),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.shopping_bag_outlined,
-                  title: 'Agri Seeds & Inputs Store',
-                  route: AppRoutes.shopping,
-                ),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.smart_toy_outlined,
-                  title: 'Farmer AI Assistant',
-                  route: AppRoutes.chatbot,
-                ),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.event_available_outlined,
-                  title: 'Farm Task Planner',
-                  route: AppRoutes.tasks,
-                ),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.agriculture_outlined,
-                  title: 'Agri Transport & Rental',
-                  route: AppRoutes.transport,
-                ),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.menu_book_outlined,
-                  title: 'Agronomic Knowledge Hub',
-                  route: AppRoutes.knowledge,
-                ),
-                const Divider(),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.grass_outlined,
-                  title: 'Crop Recommendation',
-                  route: AppRoutes.cropRecommend,
-                ),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.science_outlined,
-                  title: 'Fertilizer Recommendation',
-                  route: AppRoutes.fertilizerRecommend,
-                ),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.bar_chart_outlined,
-                  title: 'Yield Prediction',
-                  route: AppRoutes.yieldPredict,
-                ),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.healing_outlined,
-                  title: 'Plant Disease Detection',
-                  route: AppRoutes.diseaseDetection,
-                ),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.cloud_outlined,
-                  title: 'Weather Forecast',
-                  route: AppRoutes.weatherForecast,
-                ),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.pie_chart_outline,
-                  title: 'Agricultural Analytics',
-                  route: AppRoutes.analysis,
-                ),
-                const Divider(),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.person_outline,
-                  title: 'My Profile',
-                  route: AppRoutes.profile,
-                ),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.help_outline,
-                  title: 'Help & Support',
-                  route: AppRoutes.help,
-                ),
-              ],
-            ),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.logout, color: AppColors.error),
-            title: const Text('Logout', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w600)),
-            onTap: () {
-              authProvider.logout();
-              Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (route) => false);
-            },
-          ),
-          const SizedBox(height: 16),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildDrawerItem(
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 12, top: 12, bottom: 6),
+      child: Text(
+        title,
+        style: AppTypography.caption.copyWith(
+          color: AppColors.textTertiary,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 0.6,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDrawerTile(
     BuildContext context, {
     required IconData icon,
     required String title,
@@ -176,48 +299,48 @@ class AppDrawer extends StatelessWidget {
     String? badge,
   }) {
     final isSelected = currentRoute == route;
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: isSelected ? AppColors.primary : AppColors.textSecondary,
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 2),
+      decoration: BoxDecoration(
+        color: isSelected ? AppColors.primary.withValues(alpha: 0.12) : Colors.transparent,
+        borderRadius: AppGlass.borderRadiusSm,
       ),
-      title: Row(
-        children: [
-          Expanded(
-            child: Text(
-              title,
-              style: TextStyle(
-                color: isSelected ? AppColors.primary : AppColors.textPrimary,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              ),
-            ),
-          ),
-          if (badge != null)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(
-                color: const Color(0xFF2E7D32),
-                borderRadius: BorderRadius.circular(10),
-              ),
+      child: ListTile(
+        dense: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+        leading: Icon(
+          icon,
+          size: 20,
+          color: isSelected ? AppColors.primary : AppColors.textSecondary,
+        ),
+        title: Row(
+          children: [
+            Expanded(
               child: Text(
-                badge,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
+                title,
+                style: AppTypography.callout.copyWith(
+                  color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  fontSize: 14,
                 ),
               ),
             ),
-        ],
+            if (badge != null)
+              GlassBadge(
+                label: badge,
+                type: badge == 'LIVE' ? BadgeType.error : BadgeType.primary,
+              ),
+          ],
+        ),
+        onTap: () {
+          if (!isSelected) {
+            Navigator.pushReplacementNamed(context, route);
+          } else {
+            Navigator.pop(context);
+          }
+        },
       ),
-      selected: isSelected,
-      onTap: () {
-        if (!isSelected) {
-          Navigator.pushReplacementNamed(context, route);
-        } else {
-          Navigator.pop(context);
-        }
-      },
     );
   }
 }

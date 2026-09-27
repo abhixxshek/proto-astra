@@ -53,6 +53,29 @@ class _ServerSettingsDialogState extends State<ServerSettingsDialog> {
     }
   }
 
+  bool _isDetecting = false;
+
+  Future<void> _autoDetect() async {
+    setState(() => _isDetecting = true);
+    final detected = await ApiConfig.autoDetect();
+    if (mounted) {
+      setState(() {
+        _isDetecting = false;
+        if (detected != null) {
+          _urlController.text = detected;
+        }
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(detected != null
+              ? 'Found active server: $detected'
+              : 'Could not auto-detect server. Please check host server.'),
+          backgroundColor: detected != null ? AppColors.primary : Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -77,9 +100,27 @@ class _ServerSettingsDialogState extends State<ServerSettingsDialog> {
               controller: _urlController,
               decoration: InputDecoration(
                 labelText: 'API Base URL',
-                hintText: 'http://10.0.2.2:5000/api/v1',
+                hintText: 'http://127.0.0.1:5000/api/v1',
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                 prefixIcon: const Icon(Icons.link),
+              ),
+            ),
+            const SizedBox(height: 14),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: _isDetecting ? null : _autoDetect,
+                icon: _isDetecting
+                    ? const SizedBox(
+                        width: 14,
+                        height: 14,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.radar, size: 18, color: AppColors.primary),
+                label: Text(_isDetecting ? 'Auto-Detecting...' : 'Auto-Detect Active Server'),
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: AppColors.primary),
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -93,19 +134,24 @@ class _ServerSettingsDialogState extends State<ServerSettingsDialog> {
               runSpacing: 8,
               children: [
                 ActionChip(
-                  avatar: const Icon(Icons.phone_android, size: 16),
-                  label: const Text('Emulator (10.0.2.2)'),
-                  onPressed: () => _applyPreset(ApiConfig.defaultEmulatorUrl),
+                  avatar: const Icon(Icons.laptop, size: 16),
+                  label: const Text('ADB / Local (127.0.0.1)'),
+                  onPressed: () => _applyPreset(ApiConfig.defaultLocalhostUrl),
+                ),
+                ActionChip(
+                  avatar: const Icon(Icons.lan, size: 16),
+                  label: const Text('Ethernet (10.83.121.162)'),
+                  onPressed: () => _applyPreset(ApiConfig.defaultEthernetUrl),
                 ),
                 ActionChip(
                   avatar: const Icon(Icons.wifi, size: 16),
-                  label: const Text('Wi-Fi Phone (10.185.229.115)'),
-                  onPressed: () => _applyPreset(ApiConfig.defaultLanUrl),
+                  label: const Text('Wi-Fi (10.185.229.196)'),
+                  onPressed: () => _applyPreset(ApiConfig.defaultWifiUrl),
                 ),
                 ActionChip(
-                  avatar: const Icon(Icons.laptop, size: 16),
-                  label: const Text('Localhost (127.0.0.1)'),
-                  onPressed: () => _applyPreset(ApiConfig.defaultLocalhostUrl),
+                  avatar: const Icon(Icons.phone_android, size: 16),
+                  label: const Text('Emulator (10.0.2.2)'),
+                  onPressed: () => _applyPreset(ApiConfig.defaultEmulatorUrl),
                 ),
               ],
             ),

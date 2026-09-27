@@ -162,22 +162,34 @@ class ApiClient {
   }
 
   dynamic _processResponse(http.Response response) {
-    switch (response.statusCode) {
-      case 200:
-      case 201:
-        if (response.body.isEmpty) return {};
-        return jsonDecode(response.body);
-      case 400:
-        final body = jsonDecode(response.body);
-        throw ApiException(body['error'] ?? body['message'] ?? 'Bad Request', statusCode: 400);
-      case 401:
-        throw ApiException('Unauthorized access. Please login again.', statusCode: 401);
-      case 404:
-        throw ApiException('Resource not found on server.', statusCode: 404);
-      case 500:
-        throw ApiException('Internal server error. Please try again later.', statusCode: 500);
-      default:
-        throw ApiException('Unexpected server response (${response.statusCode})', statusCode: response.statusCode);
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      if (response.body.isEmpty) return {};
+      return jsonDecode(response.body);
     }
+
+    String message = 'Unexpected server response (${response.statusCode})';
+    try {
+      if (response.body.isNotEmpty) {
+        final body = jsonDecode(response.body);
+        if (body is Map) {
+          message = body['error']?.toString() ??
+              body['message']?.toString() ??
+              body['detail']?.toString() ??
+              message;
+        }
+      }
+    } catch (_) {
+      if (response.body.isNotEmpty && response.body.length < 200) {
+        message = response.body;
+      }
+    }
+
+    if (response.statusCode == 401) {
+      message = 'Unauthorized access. Please login again.';
+    } else if (response.statusCode == 404) {
+      message = 'Resource not found on server (404).';
+    }
+
+    throw ApiException(message, statusCode: response.statusCode);
   }
 }
