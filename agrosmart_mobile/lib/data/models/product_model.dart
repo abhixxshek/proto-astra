@@ -8,6 +8,7 @@ class ProductModel {
   final String imageUrl;
   final double rating;
   final int reviewsCount;
+  final String purchaseUrl;
   int quantity;
 
   ProductModel({
@@ -20,6 +21,7 @@ class ProductModel {
     required this.imageUrl,
     this.rating = 4.5,
     this.reviewsCount = 42,
+    this.purchaseUrl = '',
     this.quantity = 1,
   });
 
@@ -34,6 +36,7 @@ class ProductModel {
       imageUrl: json['imageUrl']?.toString() ?? '',
       rating: (json['rating'] as num?)?.toDouble() ?? 4.5,
       reviewsCount: (json['reviewsCount'] as num?)?.toInt() ?? 42,
+      purchaseUrl: json['purchaseUrl']?.toString() ?? '',
       quantity: (json['quantity'] as num?)?.toInt() ?? 1,
     );
   }
@@ -49,6 +52,7 @@ class ProductModel {
       'imageUrl': imageUrl,
       'rating': rating,
       'reviewsCount': reviewsCount,
+      'purchaseUrl': purchaseUrl,
       'quantity': quantity,
     };
   }

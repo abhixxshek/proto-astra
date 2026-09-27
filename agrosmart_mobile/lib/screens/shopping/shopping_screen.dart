@@ -6,6 +6,7 @@ import '../../data/models/product_model.dart';
 import '../../providers/shopping_provider.dart';
 import '../../providers/language_provider.dart';
 import 'cart_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ShoppingScreen extends StatelessWidget {
   const ShoppingScreen({super.key});
@@ -158,9 +159,16 @@ class ShoppingScreen extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      child: InkWell(
+        onTap: () async {
+          final uri = Uri.parse(product.purchaseUrl);
+          if (await canLaunchUrl(uri)) {
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
+          }
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           Expanded(
             child: Stack(
               children: [
@@ -259,6 +267,7 @@ class ShoppingScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import '../../app/routes/app_routes.dart';
 import '../../core/network/api_client.dart';
 import '../../core/widgets/app_drawer.dart';
 import '../../providers/language_provider.dart';
+import 'global_market_view.dart';
 
 class MarketPricesScreen extends StatefulWidget {
   const MarketPricesScreen({super.key});
@@ -69,28 +70,50 @@ class _MarketPricesScreenState extends State<MarketPricesScreen> {
   Widget build(BuildContext context) {
     final isHindi = Provider.of<LanguageProvider>(context).isHindi;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7FBF7),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1B5E20),
-        elevation: 0,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF7FBF7),
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF1B5E20),
+          elevation: 0,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                isHindi ? "कृषि मंडी भाव (Live Rates)" : "Market Prices",
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),
+              ),
+              Text(
+                isHindi ? "दैनिक मंडी जिन्स न्यूनतम/अधिकतम भाव" : "Daily APMC & Global Commodity Prices",
+                style: const TextStyle(fontSize: 11, color: Colors.white70),
+              ),
+            ],
+          ),
+          bottom: const TabBar(
+            indicatorColor: Colors.white,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white70,
+            tabs: [
+              Tab(text: "Global Futures"),
+              Tab(text: "Local Mandi"),
+            ],
+          ),
+        ),
+        drawer: const AppDrawer(currentRoute: AppRoutes.marketPrices),
+        body: TabBarView(
           children: [
-            Text(
-              isHindi ? "कृषि मंडी भाव (Live Rates)" : "APMC Mandi Market Prices",
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),
-            ),
-            Text(
-              isHindi ? "दैनिक मंडी जिन्स न्यूनतम/अधिकतम भाव" : "Daily APMC Commodity Spot Prices",
-              style: const TextStyle(fontSize: 11, color: Colors.white70),
-            ),
+            const GlobalMarketView(),
+            _buildLocalMandiTab(isHindi),
           ],
         ),
       ),
-      drawer: const AppDrawer(currentRoute: AppRoutes.marketPrices),
-      body: Column(
-        children: [
+    );
+  }
+
+  Widget _buildLocalMandiTab(bool isHindi) {
+    return Column(
+      children: [
           // Filter & Search Header
           Container(
             padding: const EdgeInsets.all(14),
@@ -261,7 +284,6 @@ class _MarketPricesScreenState extends State<MarketPricesScreen> {
                       ),
           ),
         ],
-      ),
-    );
+      );
   }
 }

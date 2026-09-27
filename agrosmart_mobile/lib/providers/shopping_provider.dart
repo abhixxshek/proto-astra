@@ -15,6 +15,7 @@ class ShoppingProvider extends ChangeNotifier {
       imageUrl: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=500',
       rating: 4.8,
       reviewsCount: 124,
+      purchaseUrl: 'https://www.amazon.in/s?k=hybrid+wheat+seeds',
     ),
     ProductModel(
       id: 'p2',
@@ -26,6 +27,7 @@ class ShoppingProvider extends ChangeNotifier {
       imageUrl: 'https://images.unsplash.com/photo-1628352081506-83c43123ed6d?w=500',
       rating: 4.6,
       reviewsCount: 89,
+      purchaseUrl: 'https://www.amazon.in/s?k=organic+npk+fertilizer',
     ),
     ProductModel(
       id: 'p3',
@@ -37,6 +39,7 @@ class ShoppingProvider extends ChangeNotifier {
       imageUrl: 'https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?w=500',
       rating: 4.9,
       reviewsCount: 310,
+      purchaseUrl: 'https://www.amazon.in/s?k=neem+coated+urea',
     ),
     ProductModel(
       id: 'p4',
@@ -48,6 +51,7 @@ class ShoppingProvider extends ChangeNotifier {
       imageUrl: 'https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=500',
       rating: 4.7,
       reviewsCount: 64,
+      purchaseUrl: 'https://www.amazon.in/s?k=knapsack+sprayer',
     ),
     ProductModel(
       id: 'p5',
@@ -59,6 +63,7 @@ class ShoppingProvider extends ChangeNotifier {
       imageUrl: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=500',
       rating: 4.7,
       reviewsCount: 95,
+      purchaseUrl: 'https://www.amazon.in/s?k=hybrid+maize+seeds',
     ),
     ProductModel(
       id: 'p6',
@@ -70,6 +75,7 @@ class ShoppingProvider extends ChangeNotifier {
       imageUrl: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=500',
       rating: 4.5,
       reviewsCount: 48,
+      purchaseUrl: 'https://www.amazon.in/s?k=micronutrient+fertilizer',
     ),
   ];
 

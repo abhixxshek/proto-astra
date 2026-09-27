@@ -39,13 +39,22 @@ class TransportScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.agriculture_rounded, color: Color(0xFF2E7D32), size: 24),
-                        const SizedBox(width: 8),
-                        Text(v.modelName, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                      ],
+                    Expanded(
+                      child: Row(
+                        children: [
+                          const Icon(Icons.agriculture_rounded, color: Color(0xFF2E7D32), size: 24),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              v.modelName,
+                              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                    const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(color: const Color(0xFFE8F5E9), borderRadius: BorderRadius.circular(12)),

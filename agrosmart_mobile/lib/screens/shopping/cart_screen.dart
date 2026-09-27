@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/shopping_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -81,6 +82,15 @@ class CartScreen extends StatelessWidget {
                             Row(
                               children: [
                                 IconButton(
+                                  icon: const Icon(Icons.open_in_new, size: 20, color: Colors.blue),
+                                  onPressed: () async {
+                                    final uri = Uri.parse(item.purchaseUrl);
+                                    if (await canLaunchUrl(uri)) {
+                                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                    }
+                                  },
+                                ),
+                                IconButton(
                                   icon: const Icon(Icons.remove_circle_outline, size: 20, color: Color(0xFF2E7D32)),
                                   onPressed: () => shopping.updateQuantity(item.id, -1),
                                 ),
@@ -134,22 +144,30 @@ class CartScreen extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            for (var item in shopping.cart) {
+                              final uri = Uri.parse(item.purchaseUrl);
+                              if (await canLaunchUrl(uri)) {
+                                await launchUrl(uri, mode: LaunchMode.externalApplication);
+                              }
+                            }
                             shopping.clearCart();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Order Placed Successfully! Cash on Delivery confirmed.'),
-                                backgroundColor: Color(0xFF2E7D32),
-                              ),
-                            );
-                            Navigator.pop(context);
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Redirecting to product pages for individual ordering...'),
+                                  backgroundColor: Color(0xFF2E7D32),
+                                ),
+                              );
+                              Navigator.pop(context);
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF2E7D32),
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                           ),
-                          child: const Text('Proceed to Cash on Delivery Checkout', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+                          child: const Text('Proceed to Individual Product Ordering', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
                         ),
                       ),
                     ],

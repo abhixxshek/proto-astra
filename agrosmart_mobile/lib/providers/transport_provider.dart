@@ -18,7 +18,7 @@ class TransportProvider extends ChangeNotifier {
       ownerName: 'Balwant Singh',
       vehicleType: 'Harvester',
       modelName: 'Preet Combine Harvester',
-      rate: '₹1,800 / Acre',
+      rate: '₹1,800 / Mile',
       location: 'Ludhiana, Punjab',
       phone: '+919812345678',
       isAvailable: true,

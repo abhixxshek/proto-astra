@@ -1,0 +1,128 @@
+{
+  "asOf": "2026-09-25",
+  "categories": [
+    {
+      "name": "Grains",
+      "commodities": [
+        {
+          "name": "Corn",
+          "contracts": [
+            { "contract": "Dec'26", "last": "528-2s", "change": "+0-6", "tradeTime": "09/25/26" },
+            { "contract": "Mar'27", "last": "542-0s", "change": "+0-4", "tradeTime": "09/25/26" },
+            { "contract": "May'27", "last": "548-6s", "change": "+0-4", "tradeTime": "09/25/26" },
+            { "contract": "Jul'27", "last": "551-4s", "change": "+1-0", "tradeTime": "09/25/26" },
+            { "contract": "Sep'27", "last": "523-6s", "change": "+1-0", "tradeTime": "09/25/26" }
+          ]
+        },
+        {
+          "name": "Soybean",
+          "contracts": [
+            { "contract": "Nov'26", "last": "1319-0s", "change": "+1-4", "tradeTime": "09/25/26" },
+            { "contract": "Jan'27", "last": "1332-4s", "change": "+0-4", "tradeTime": "09/25/26" },
+            { "contract": "Mar'27", "last": "1339-4s", "change": "-0-2", "tradeTime": "09/25/26" },
+            { "contract": "May'27", "last": "1346-2s", "change": "-0-4", "tradeTime": "09/25/26" },
+            { "contract": "Jul'27", "last": "1350-6s", "change": "-0-4", "tradeTime": "09/25/26" }
+          ]
+        },
+        {
+          "name": "Soybean Meal",
+          "contracts": [
+            { "contract": "Oct'26", "last": "373.9s", "change": "-2.2", "tradeTime": "09/25/26" },
+            { "contract": "Dec'26", "last": "371.0s", "change": "-1.4", "tradeTime": "09/25/26" },
+            { "contract": "Jan'27", "last": "369.8s", "change": "-0.8", "tradeTime": "09/25/26" },
+            { "contract": "Mar'27", "last": "368.3s", "change": "-0.5", "tradeTime": "09/25/26" },
+            { "contract": "May'27", "last": "367.9s", "change": "-0.5", "tradeTime": "09/25/26" }
+          ]
+        },
+        {
+          "name": "Soybean Oil",
+          "contracts": [
+            { "contract": "Oct'26", "last": "67.26s", "change": "+0.33", "tradeTime": "09/25/26" },
+            { "contract": "Dec'26", "last": "67.84s", "change": "+0.29", "tradeTime": "09/25/26" },
+            { "contract": "Jan'27", "last": "68.05s", "change": "+0.23", "tradeTime": "09/25/26" },
+            { "contract": "Mar'27", "last": "68.26s", "change": "+0.15", "tradeTime": "09/25/26" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Meats",
+      "commodities": [
+        {
+          "name": "Live Cattle",
+          "contracts": [
+            { "contract": "Oct'26", "last": "218.875s", "change": "-0.200", "tradeTime": "09/25/26" },
+            { "contract": "Dec'26", "last": "222.150s", "change": "+1.050", "tradeTime": "09/25/26" },
+            { "contract": "Feb'27", "last": "224.300s", "change": "+1.425", "tradeTime": "09/25/26" },
+            { "contract": "Apr'27", "last": "225.825s", "change": "+1.300", "tradeTime": "09/25/26" },
+            { "contract": "Jun'27", "last": "220.725s", "change": "+1.350", "tradeTime": "09/25/26" }
+          ]
+        },
+        {
+          "name": "Feeder Cattle",
+          "contracts": [
+            { "contract": "Oct'26", "last": "334.925s", "change": "+3.175", "tradeTime": "09/25/26" },
+            { "contract": "Nov'26", "last": "331.975s", "change": "+3.900", "tradeTime": "09/25/26" },
+            { "contract": "Jan'27", "last": "324.350s", "change": "+3.700", "tradeTime": "09/25/26" },
+            { "contract": "Mar'27", "last": "320.175s", "change": "+3.575", "tradeTime": "09/25/26" },
+            { "contract": "Apr'27", "last": "319.450s", "change": "+3.175", "tradeTime": "09/25/26" }
+          ]
+        },
+        {
+          "name": "Lean Hogs",
+          "contracts": [
+            { "contract": "Oct'26", "last": "78.225s", "change": "-0.975", "tradeTime": "09/25/26" },
+            { "contract": "Dec'26", "last": "69.025s", "change": "-0.450", "tradeTime": "09/25/26" },
+            { "contract": "Feb'27", "last": "70.325s", "change": "-0.525", "tradeTime": "09/25/26" },
+            { "contract": "Apr'27", "last": "75.925s", "change": "-0.375", "tradeTime": "09/25/26" },
+            { "contract": "May'27", "last": "80.700s", "change": "-0.200", "tradeTime": "09/25/26" }
+          ]
+        },
+        {
+          "name": "Class III Milk",
+          "contracts": [
+            { "contract": "Sep'26", "last": "16.12s", "change": "unch", "tradeTime": "09/25/26" },
+            { "contract": "Oct'26", "last": "15.16s", "change": "-0.14", "tradeTime": "09/25/26" },
+            { "contract": "Nov'26", "last": "15.86s", "change": "-0.02", "tradeTime": "09/25/26" },
+            { "contract": "Dec'26", "last": "16.14s", "change": "+0.06", "tradeTime": "09/25/26" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Softs",
+      "commodities": [
+        {
+          "name": "Cotton #2",
+          "contracts": [
+            { "contract": "Oct'26", "last": "78.91s", "change": "-0.60", "tradeTime": "09/25/26" },
+            { "contract": "Dec'26", "last": "82.71s", "change": "-0.60", "tradeTime": "09/25/26" },
+            { "contract": "Mar'27", "last": "85.49s", "change": "-0.57", "tradeTime": "09/25/26" },
+            { "contract": "May'27", "last": "87.17s", "change": "-0.56", "tradeTime": "09/25/26" },
+            { "contract": "Jul'27", "last": "87.43s", "change": "-0.54", "tradeTime": "09/25/26" }
+          ]
+        },
+        {
+          "name": "Sugar #11",
+          "contracts": [
+            { "contract": "Oct'26", "last": "17.50s", "change": "-0.08", "tradeTime": "09/25/26" },
+            { "contract": "Mar'27", "last": "18.50s", "change": "-0.11", "tradeTime": "09/25/26" },
+            { "contract": "May'27", "last": "17.97s", "change": "-0.09", "tradeTime": "09/25/26" },
+            { "contract": "Jul'27", "last": "17.73s", "change": "-0.05", "tradeTime": "09/25/26" },
+            { "contract": "Oct'27", "last": "17.83s", "change": "-0.03", "tradeTime": "09/25/26" }
+          ]
+        },
+        {
+          "name": "Coffee",
+          "contracts": [
+            { "contract": "Dec'26", "last": "278.60s", "change": "+3.25", "tradeTime": "09/25/26" },
+            { "contract": "Mar'27", "last": "271.25s", "change": "+3.55", "tradeTime": "09/25/26" },
+            { "contract": "May'27", "last": "268.90s", "change": "+3.75", "tradeTime": "09/25/26" },
+            { "contract": "Jul'27", "last": "267.60s", "change": "+3.60", "tradeTime": "09/25/26" },
+            { "contract": "Sep'27", "last": "266.00s", "change": "+3.45", "tradeTime": "09/25/26" }
+          ]
+        }
+      ]
+    }
+  ]
+}
