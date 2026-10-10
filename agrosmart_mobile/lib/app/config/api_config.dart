@@ -4,15 +4,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiConfig {
   static const String defaultEmulatorUrl = 'http://10.0.2.2:5000/api/v1';
   static const String defaultLocalhostUrl = 'http://127.0.0.1:5000/api/v1';
-  static const String defaultEthernetUrl = 'http://10.83.121.162:5000/api/v1';
-  static const String defaultWifiUrl = 'http://10.185.229.196:5000/api/v1';
-  static const String defaultLanUrl = 'http://10.83.121.231:5000/api/v1';
+  static const String defaultEthernetUrl = 'http://10.83.121.132:5000/api/v1';
+  static const String defaultWifiUrl = 'http://10.185.229.115:5000/api/v1';
+  static const String defaultWslUrl = 'http://172.22.144.1:5000/api/v1';
 
   static final List<String> candidateBaseUrls = [
     defaultLocalhostUrl,
     defaultEthernetUrl,
     defaultWifiUrl,
-    defaultLanUrl,
+    defaultWslUrl,
     defaultEmulatorUrl,
   ];
 

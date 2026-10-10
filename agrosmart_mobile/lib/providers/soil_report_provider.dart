@@ -196,7 +196,6 @@ class SoilReportProvider extends ChangeNotifier {
   /// Lets farmer pick a PDF file from device and triggers extraction pipeline.
   Future<void> pickAndUploadPdf() async {
     try {
-      _setError(null);
       final PlatformFile? file = await FilePicker.pickFile(
         type: FileType.custom,
         allowedExtensions: ['pdf', 'PDF'],

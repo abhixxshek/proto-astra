@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import '../../data/models/market_data.dart';
 
 class GlobalMarketView extends StatefulWidget {
-  const GlobalMarketView({Key? key}) : super(key: key);
+  const GlobalMarketView({super.key});
 
   @override
   State<GlobalMarketView> createState() => _GlobalMarketViewState();

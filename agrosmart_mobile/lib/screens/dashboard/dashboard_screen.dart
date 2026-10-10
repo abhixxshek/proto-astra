@@ -530,7 +530,7 @@ class _LiveNewsCarouselState extends State<_LiveNewsCarousel> {
                           Image.network(
                             item['imageUrl']!,
                             fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => Container(color: AppColors.primaryLight),
+                            errorBuilder: (context, error, stackTrace) => Container(color: AppColors.primaryLight),
                           ),
                           Positioned(
                             top: 12,
